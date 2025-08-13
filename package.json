@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx tsx test/test-diet-agent.ts",
     "test:agent": "npx tsx test/test-agent-only.ts",
     "test:interactive": "npx tsx test/interactive-test.ts",
     "dev": "mastra dev",
     "build": "mastra build",
     "start": "mastra start",
-    "deploy":"npm run build && wrangler deploy --config .mastra/output/wrangler.json"
+    "deploy": "npm run build && wrangler deploy --config .mastra/output/wrangler.json"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +25,7 @@
     "@mastra/libsql": "^0.13.1",
     "@mastra/loggers": "^0.10.6",
     "@mastra/memory": "^0.12.1",
+    "@mastra/openai": "1.0.1-alpha.48",
     "axios": "^1.11.0",
     "zod": "^3.25.76"
   },
