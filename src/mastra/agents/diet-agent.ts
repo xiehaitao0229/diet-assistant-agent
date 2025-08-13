@@ -1,11 +1,5 @@
 import { Agent } from "@mastra/core/agent";
-import { createOpenAI } from '@ai-sdk/openai';
-
-// 使用 DeepSeek API
-const deepseek = createOpenAI({
-  apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY,
-  baseURL: 'https://api.deepseek.com/v1', // DeepSeek API 端点
-});
+import { deepseek } from '@ai-sdk/deepseek';
 
 export const dietAgent = new Agent({
   name: "饮食记录助手",
