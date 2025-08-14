@@ -11,7 +11,7 @@ export const mastra = new Mastra({
     dietLoggingWorkflow
   },
   deployer: new CloudflareDeployer({
-    scope: "23aed57dc62184e8780a6a0b77b9a51f",
     projectName: "diet-assistant-agent",
+    compatibilityFlags: ["nodejs_compat"],
   }),
 });

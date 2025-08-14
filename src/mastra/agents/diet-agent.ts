@@ -1,5 +1,10 @@
 import { Agent } from "@mastra/core/agent";
-import { deepseek } from '@ai-sdk/deepseek';
+import { createOpenAI } from '@ai-sdk/openai';
+
+const ai = createOpenAI({
+  baseURL: 'https://api.deepseek.com',
+  apiKey: process.env.DEEPSEEK_API_KEY
+})
 
 export const dietAgent = new Agent({
   name: "饮食记录助手",
@@ -23,5 +28,5 @@ export const dietAgent = new Agent({
     当用户描述食物时，首先搜索最匹配的食物，然后获取详细营养信息。
     特别注意中文食物名称的识别和翻译。
   `,
-  model: deepseek('deepseek-chat'), // 或 'deepseek-coder'
+  model: ai('deepseek-chat'),
 });

@@ -21,7 +21,7 @@ const searchFoodStep = createStep({
   }),
   execute: async ({ inputData }) => {
     const { food_description, meal_type } = inputData;
-    
+
     const result = await dietAgent.generate([
       {
         role: "user",
@@ -64,10 +64,10 @@ const getNutritionStep = createStep({
   }),
   execute: async ({ inputData }) => {
     const { found_foods, meal_type, serving_amount } = inputData;
-    
+
     // 选择最匹配的食物（第一个）
     const selectedFood = found_foods[0];
-    
+
     const result = await dietAgent.generate([
       {
         role: "user",
@@ -112,7 +112,7 @@ const generateSummaryStep = createStep({
   }),
   execute: async ({ inputData }) => {
     const { food_item, nutrition_summary } = inputData;
-    
+
     const result = await dietAgent.generate([
       {
         role: "user",
@@ -149,6 +149,36 @@ const generateSummaryStep = createStep({
   }
 });
 
+// 步骤 4: 格式化最终输出
+const formatOutputStep = createStep({
+  id: "format-output-step",
+  description: "格式化工作流的最终输出",
+  inputSchema: z.object({
+    log_entry: MealLogSchema,
+    health_tips: z.array(z.string()),
+    daily_progress: z.string(),
+    food_description: z.string() // 从初始输入传递过来
+  }),
+  outputSchema: z.object({
+    success: z.boolean(),
+    log_entry: MealLogSchema,
+    health_tips: z.array(z.string()),
+    daily_progress: z.string(),
+    message: z.string()
+  }),
+  execute: async ({ inputData }) => {
+    const { log_entry, health_tips, daily_progress, food_description } = inputData;
+
+    return {
+      success: true,
+      log_entry,
+      health_tips,
+      daily_progress,
+      message: `成功记录 ${food_description}! 🎉`
+    };
+  }
+});
+
 // 创建完整的饮食记录工作流
 export const dietLoggingWorkflow = createWorkflow({
   id: "diet-logging-workflow",
@@ -165,18 +195,18 @@ export const dietLoggingWorkflow = createWorkflow({
     message: z.string()
   })
 })
-.then(searchFoodStep)
-.then(getNutritionStep)
-.then(generateSummaryStep)
-.map(async ({ results, inputData }) => {
-  const summaryResult = results[2]; // 最后一步的结果
-  
-  return {
-    success: true,
-    log_entry: summaryResult.log_entry,
-    health_tips: summaryResult.health_tips,
-    daily_progress: summaryResult.daily_progress,
-    message: `成功记录 ${inputData.food_description}! 🎉`
-  };
-})
-.commit();
+  .then(searchFoodStep)
+  .then(getNutritionStep)
+  .then(generateSummaryStep)
+  .then(formatOutputStep, ({ results, inputData }) => {
+    // 合并前面步骤的结果和初始输入
+    const summaryResult = results[2]; // generateSummaryStep 的结果
+
+    return {
+      log_entry: summaryResult.log_entry,
+      health_tips: summaryResult.health_tips,
+      daily_progress: summaryResult.daily_progress,
+      food_description: inputData.food_description
+    };
+  })
+  .commit();
