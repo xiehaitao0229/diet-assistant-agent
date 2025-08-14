@@ -154,3 +154,11 @@ AI Agent 使用 DeepSeek Chat 模型，支持以下配置：
 ## 📄 许可证
 
 ISC License
+
+
+## 前端项目地址
+https://github.com/xiehaitao0229/diet-assistant-fe
+
+## 整体的项目结构图
+![e575845f1d5e69df627e3825ce38b694](https://github.com/user-attachments/assets/e76bc1ff-f9d1-445c-bf11-3f35d33969c5)
+
